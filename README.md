@@ -1,4 +1,4 @@
-# hiding-tex-in-image-file
+# hiding-text-in-image-file
 
 
 
