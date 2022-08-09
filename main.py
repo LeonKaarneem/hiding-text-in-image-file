@@ -56,7 +56,8 @@ def clear_previous_image_selection() -> None:
 def open_file_selection() -> None:
     try:
         global file_path
-        file_path = filedialog.askopenfilename(initialdir=os.path.abspath(os.getcwd()), title="pick",
+        open_directory = file_path if file_path else os.path.abspath(os.getcwd())
+        file_path = filedialog.askopenfilename(initialdir=open_directory, title="pick",
                                                filetypes=(("All files", "*.*"), ("JPG files", "*.jpg")))
         info_label.config(text=file_path, fg="#000")
     except Exception as exception:
