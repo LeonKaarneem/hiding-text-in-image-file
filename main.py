@@ -5,29 +5,50 @@ import os
 
 # tkinter initialization
 application = Tk()
-application.title("Super Mega Hiding Text In Images And Reading It From Images Application")
-screen_width, screen_height = 580, 460
-application.geometry("{}x{}".format(screen_width, screen_height))
-application.resizable(False, False)
-
-# tkinter - input
-text_input = Entry(application, width=screen_width)
-text_input.pack(pady=15, padx=15)
-
-# tkinter - info label
-info_label = Label(application, text="Choose an image to get started", pady=15)
-info_label.pack()
-
-# tkinter - image canvas
-image_canvas = Frame(application, width=300, height=300, bg='#D3D3D3')
-image_canvas.pack()
-image_canvas_height, image_canvas_width = (300, 300)
-image_canvas.place(anchor='center', relx=0.5, y=250, height=image_canvas_height, width=image_canvas_width)
 
 # globals
-file_path = ""
-image_on_canvas = Label()
+file_path = os.path.abspath(os.getcwd())
+image_on_canvas: Label
 resized_tk_img: PhotoImage
+text_input: Entry
+image_canvas: Frame
+info_label: Label
+image_canvas_width: int
+image_canvas_height: int
+
+
+def initialize(app):
+    global text_input, image_canvas, info_label, image_canvas_height, image_canvas_width
+    app.title("Super Mega Hiding Text In Images And Reading It From Images Application")
+    screen_width, screen_height = 580, 460
+    app.geometry("{}x{}".format(screen_width, screen_height))
+    app.resizable(False, False)
+
+    # tkinter - input
+    text_input = Entry(app, width=screen_width)
+    text_input.pack(pady=15, padx=15)
+
+    # tkinter - info label
+    info_label = Label(app, text="Choose an image to get started", pady=15)
+    info_label.pack()
+
+    # tkinter - image canvas
+    image_canvas = Frame(app, width=300, height=300, bg='#D3D3D3')
+    image_canvas.pack()
+    image_canvas_height, image_canvas_width = (300, 300)
+    image_canvas.place(anchor='center', relx=0.5, y=250, height=image_canvas_height, width=image_canvas_width)
+
+    # tkinter - select button
+    select_button = Button(app, text="Select an image", padx=10, pady=10, width=10, command=select_image)
+    select_button.place(x=15, y=100)
+
+    # tkinter - save button
+    save_button = Button(app, text="Save hidden text", padx=10, pady=10, width=10, command=save_image)
+    save_button.place(x=15, y=150)
+
+    # tkinter - exit button
+    quit_button = Button(app, text="Exit Application", command=app.quit)
+    quit_button.pack(side=BOTTOM, pady=20)
 
 
 def resize_to_fit_canvas(image_height: int, image_width: int, canvas_height: int, canvas_width: int) -> (int, int):
@@ -35,12 +56,12 @@ def resize_to_fit_canvas(image_height: int, image_width: int, canvas_height: int
     ratio_width = image_width / canvas_width
 
     if ratio_width > ratio_height:
-        newHeight = round(image_height / ratio_width)
-        newWidth = canvas_width
+        new_height = round(image_height / ratio_width)
+        new_width = canvas_width
     else:
-        newHeight = canvas_height
-        newWidth = round(image_width / ratio_height)
-    return newHeight, newWidth
+        new_height = canvas_height
+        new_width = round(image_width / ratio_height)
+    return new_height, new_width
 
 
 def center_on_canvas(canvas_size: int, image_size: int) -> int:
@@ -56,7 +77,7 @@ def clear_previous_image_selection() -> None:
 def open_file_selection() -> None:
     try:
         global file_path
-        open_directory = file_path if file_path else os.path.abspath(os.getcwd())
+        open_directory = file_path
         file_path = filedialog.askopenfilename(initialdir=open_directory, title="pick",
                                                filetypes=(("All files", "*.*"), ("JPG files", "*.jpg")))
         info_label.config(text=file_path, fg="#000")
@@ -126,17 +147,6 @@ def save_image():
         info_label.config(text="Please select an image first", fg='#D2042D')
 
 
-# tkinter - select button
-select_button = Button(application, text="Select an image", padx=10, pady=10, width=10, command=select_image)
-select_button.place(x=15, y=100)
-
-# tkinter - save button
-save_button = Button(application, text="Save hidden text", padx=10, pady=10, width=10, command=save_image)
-save_button.place(x=15, y=150)
-
-# tkinter - exit button
-quit_button = Button(application, text="Exit Application", command=application.quit)
-quit_button.pack(side=BOTTOM, pady=20)
-
+initialize(application)
 # start application
 application.mainloop()
